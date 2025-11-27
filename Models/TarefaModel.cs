@@ -38,6 +38,6 @@ namespace ListaDeTarefas.Models
 
 
         [Display(Name = "Categoria")]
-        public required CategoriaModel Categoria { get; set; }
+        public CategoriaModel? Categoria { get; set; }
     }
 }
