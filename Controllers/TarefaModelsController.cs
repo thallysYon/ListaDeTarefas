@@ -21,29 +21,42 @@ namespace ListaDeTarefas.Controllers
         }
 
         // GET: TarefaModels
-        public async Task<IActionResult> Index(string searchString, string statusFilter, int? pageNumber)
+        public async Task<IActionResult> Index(
+            string searchString,
+            string statusFilter,
+            string prioridadeFilter,
+            string dataCriacaoFilter,
+            string dataLimiteFilter,
+            int? categoriaFilter,
+            int? pageNumber)
         {
-           
+            
             ViewData["CurrentFilter"] = searchString ?? "";
             ViewData["CurrentStatus"] = statusFilter ?? "";
+            ViewData["CurrentPrioridade"] = prioridadeFilter ?? "";
+            ViewData["CurrentDataCriacao"] = dataCriacaoFilter ?? "";
+            ViewData["CurrentDataLimite"] = dataLimiteFilter ?? "";
+            ViewData["CurrentCategoria"] = categoriaFilter?.ToString() ?? "";
 
-           
+            
             ViewBag.StatusOptions = Enum.GetNames(typeof(SituacaoEnum)).ToList();
+            ViewBag.PrioridadeOptions = Enum.GetNames(typeof(PrioridadeEnum)).ToList();
+            ViewBag.Categorias = await _context.CategoriaModel.ToListAsync();
 
             var query = _context.TarefaModel
                         .Include(t => t.Categoria)
                         .AsQueryable();
 
+            
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                
                 query = query.Where(t =>
                     EF.Functions.Like(t.Titulo, $"%{searchString}%") ||
-                    EF.Functions.Like(t.Descricao, $"%{searchString}%")||
-                    EF.Functions.Like(t.Categoria.Nome, $"%{searchString}%")||
-                    EF.Functions.Like(t.Prioridade.ToString(), $"%{searchString}%") ||
-                    EF.Functions.Like(t.DataDeCriacao.ToString(), $"%{searchString}%")||
-                    EF.Functions.Like(t.DataLimite.ToString(), $"%{searchString}%"));
+                    EF.Functions.Like(t.Descricao, $"%{searchString}%") ||
+                    EF.Functions.Like(t.Categoria.Nome, $"%{searchString}%") ||
+                    EF.Functions.Like(t.Prioridade.ToString(), $"%{searchString}%")
+                );
+                
             }
 
             if (!string.IsNullOrWhiteSpace(statusFilter))
@@ -51,6 +64,35 @@ namespace ListaDeTarefas.Controllers
                 if (Enum.TryParse<SituacaoEnum>(statusFilter, true, out var situacao))
                 {
                     query = query.Where(t => t.Situacao == situacao);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(prioridadeFilter))
+            {
+                if (Enum.TryParse<PrioridadeEnum>(prioridadeFilter, true, out var prioridade))
+                {
+                    query = query.Where(t => t.Prioridade == prioridade);
+                }
+            }
+
+            if (categoriaFilter.HasValue)
+            {
+                query = query.Where(t => t.CategoriaId == categoriaFilter.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dataCriacaoFilter))
+            {
+                if (DateTime.TryParse(dataCriacaoFilter, out DateTime dataCriacao))
+                {
+                    query = query.Where(t => t.DataDeCriacao.Date == dataCriacao.Date);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(dataLimiteFilter))
+            {
+                if (DateTime.TryParse(dataLimiteFilter, out DateTime dataLimite))
+                {
+                    query = query.Where(t => t.DataLimite.Date == dataLimite.Date);
                 }
             }
 
@@ -115,10 +157,12 @@ namespace ListaDeTarefas.Controllers
             }
 
             var tarefaModel = await _context.TarefaModel.FindAsync(id);
+
             if (tarefaModel == null)
             {
                 return NotFound();
             }
+
             ViewData["CategoriaId"] = new SelectList(_context.CategoriaModel, "Id", "Nome", tarefaModel.CategoriaId);
             return View(tarefaModel);
         }

@@ -20,9 +20,41 @@ namespace ListaDeTarefas.Controllers
         }
 
         // GET: CategoriaModels
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            string sortOrder,
+            int? pageNumber)
         {
-            return View(await _context.CategoriaModel.ToListAsync());
+            
+            ViewData["CurrentFilter"] = searchString ?? "";
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DescSortParm"] = sortOrder == "desc" ? "desc_desc" : "desc";
+
+            var query = _context.CategoriaModel.AsQueryable();
+
+            
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query = query.Where(c =>
+                    EF.Functions.Like(c.Nome, $"%{searchString}%") ||
+                    EF.Functions.Like(c.Descricao, $"%{searchString}%"));
+            }
+
+            
+            query = sortOrder switch
+            {
+                "name_desc" => query.OrderByDescending(c => c.Nome),
+                "desc" => query.OrderBy(c => c.Descricao),
+                "desc_desc" => query.OrderByDescending(c => c.Descricao),
+                _ => query.OrderBy(c => c.Nome)
+            };
+
+            
+            int pageSize = 10;
+            var model = await PaginatedList<CategoriaModel>.CreateAsync(query.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
 
         // GET: CategoriaModels/Details/5
