@@ -1,64 +1,95 @@
 ﻿@model ListaDeTarefas.Models.TarefaModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Tarefa";
 }
 
-<h1>Edit</h1>
-
-<h4>TarefaModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="card text-center">
+    <div class="card-header bg-primary-subtle">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-pencil-square me-2"></i>Editar Tarefa
+        </h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" id="editForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="Titulo" class="form-label fw-bold">Título</label>
+                        <input asp-for="Titulo" class="form-control" placeholder="Digite o título da tarefa" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="CategoriaId" class="form-label fw-bold">Categoria</label>
+                        <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId">
+                            <option value="">Selecione uma categoria</option>
+                        </select>
+                        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Descricao" class="control-label"></label>
-                <textarea asp-for="Descricao" class="form-control"></textarea>
+
+            <div class="form-group mb-3 text-start">
+                <label asp-for="Descricao" class="form-label fw-bold">Descrição</label>
+                <textarea asp-for="Descricao" class="form-control" placeholder="Descreva a tarefa..." rows="3"></textarea>
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DataDeCriacao" class="control-label"></label>
-                <input asp-for="DataDeCriacao" class="form-control" />
-                <span asp-validation-for="DataDeCriacao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DataLimite" class="control-label"></label>
-                <input asp-for="DataLimite" class="form-control" />
-                <span asp-validation-for="DataLimite" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Prioridade" class="control-label"></label>
-                <select asp-for="Prioridade" class="form-control"></select>
-                <span asp-validation-for="Prioridade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Situacao" class="control-label"></label>
-                <select asp-for="Situacao" class="form-control"></select>
-                <span asp-validation-for="Situacao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoriaId" class="control-label"></label>
-                <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId"></select>
-                <span asp-validation-for="CategoriaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="DataDeCriacao" class="form-label fw-bold">Data de Criação</label>
+                        <input asp-for="DataDeCriacao" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="DataDeCriacao" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="DataLimite" class="form-label fw-bold">Data Limite</label>
+                        <input asp-for="DataLimite" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="DataLimite" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="Prioridade" class="form-label fw-bold">Prioridade</label>
+                        <select asp-for="Prioridade" class="form-control" asp-items="Html.GetEnumSelectList<ListaDeTarefas.Enums.PrioridadeEnum>()">
+                            <option value="">Selecione</option>
+                        </select>
+                        <span asp-validation-for="Prioridade" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="Situacao" class="form-label fw-bold">Situação</label>
+                        <select asp-for="Situacao" class="form-control" asp-items="Html.GetEnumSelectList<ListaDeTarefas.Enums.SituacaoEnum>()">
+                            <option value="">Selecione</option>
+                        </select>
+                        <span asp-validation-for="Situacao" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-footer bg-transparent">
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="submit" form="editForm" class="btn btn-primary col-6">
+                <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+            </button>
+            <a asp-action="Index" class="btn btn-secondary col-6">
+                <i class="bi bi-arrow-left me-2"></i>Cancelar
+            </a>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

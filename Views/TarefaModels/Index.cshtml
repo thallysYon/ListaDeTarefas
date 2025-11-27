@@ -5,54 +5,132 @@
     ViewData["Title"] = "Index";
     var currentFilter = ViewData["CurrentFilter"] as string ?? "";
     var currentStatus = ViewData["CurrentStatus"] as string ?? "";
+    var currentPrioridade = ViewData["CurrentPrioridade"] as string ?? "";
+    var currentCategoria = ViewData["CurrentCategoria"] as string ?? "";
+    var currentDataCriacao = ViewData["CurrentDataCriacao"] as string ?? "";
+    var currentDataLimite = ViewData["CurrentDataLimite"] as string ?? "";
+
     var statusOptions = ViewBag.StatusOptions as IEnumerable<string> ?? new string[] { };
+    var prioridadeOptions = ViewBag.PrioridadeOptions as IEnumerable<string> ?? new string[] { };
+    var categorias = ViewBag.Categorias as IEnumerable<ListaDeTarefas.Models.CategoriaModel> ?? new List<ListaDeTarefas.Models.CategoriaModel>();
 }
 
-<h1>Lista de tarefas</h1>
+<h1>Tarefas</h1>
 
 
-    
-        <form asp-controller="TarefaModels" asp-action="Index" method="get" class="row g-3 mb-3">
-            <div class="col-md-5">
+<div class="mb-3">
+    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosAccordion" aria-expanded="false" aria-controls="filtrosAccordion">
+        <i class="bi bi-funnel me-2"></i>Filtros
+    </button>
+    <a asp-action="Create" class="btn btn-sm btn-primary ms-2">
+        <i class="bi bi-plus-square"></i>
+        Adicionar
+    </a>
+</div>
+
+<div class="collapse mb-3" id="filtrosAccordion">
+    <div class="card card-body">
+        <form asp-controller="TarefaModels" asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Buscar texto</label>
                 <input type="text"
                        name="searchString"
                        class="form-control"
-                       placeholder="Buscar por título..."
+                       placeholder="Título da tarefa..."
                        value="@currentFilter" />
             </div>
 
             <div class="col-md-4">
+                <label class="form-label small fw-bold">Situação</label>
                 <select name="statusFilter" class="form-control">
-                    <option value="">Todos</option>
+                    <option value="">Todas situações</option>
                     @foreach (var status in statusOptions)
                     {
-                        if (string.Equals(status, currentStatus, StringComparison.OrdinalIgnoreCase))
-                        {
-                            <option value="@status" selected>@status</option>
-                        }
-                        else
-                        {
-                            <option value="@status">@status</option>
-                        }
+                        <option value="@status" selected="@(status == currentStatus)">
+                            @status
+                        </option>
                     }
                 </select>
             </div>
 
-            <div class="col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-search me-1 text-light"></i> Filtrar
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Prioridade</label>
+                <select name="prioridadeFilter" class="form-control">
+                    <option value="">Todas prioridades</option>
+                    @foreach (var prioridade in prioridadeOptions)
+                    {
+                        <option value="@prioridade" selected="@(prioridade == currentPrioridade)">
+                            @prioridade
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Categoria</label>
+                <select name="categoriaFilter" class="form-control">
+                    <option value="">Todas categorias</option>
+                    @foreach (var categoria in categorias)
+                    {
+                        <option value="@categoria.Id" selected="@(categoria.Id.ToString() == currentCategoria)">
+                            @categoria.Nome
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Data de Criação</label>
+                <input type="date"
+                       name="dataCriacaoFilter"
+                       class="form-control"
+                       value="@currentDataCriacao" />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">Data Limite</label>
+                <input type="date"
+                       name="dataLimiteFilter"
+                       class="form-control"
+                       value="@currentDataLimite" />
+            </div>
+
+            <div class="col-12 d-flex gap-2 justify-content-end mt-3">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="bi bi-search me-1"></i> Aplicar Filtros
                 </button>
-                <a asp-controller="TarefaModels" asp-action="Index" class="btn btn-secondary w-100">Limpar</a>
+                <a asp-controller="TarefaModels" asp-action="Index" class="btn btn-sm btn-secondary">
+                    <i class="bi bi-x-circle me-1"></i> Limpar
+                </a>
             </div>
         </form>
-    
+    </div>
+</div>
 
+@if (!string.IsNullOrEmpty(currentFilter) || !string.IsNullOrEmpty(currentStatus) || !string.IsNullOrEmpty(currentPrioridade) || !string.IsNullOrEmpty(currentCategoria) || !string.IsNullOrEmpty(currentDataCriacao) || !string.IsNullOrEmpty(currentDataLimite))
+{
+    <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+        <i class="bi bi-info-circle me-2"></i>
+        <div>
+            <strong>Filtros ativos:</strong>
+            @{
+                var filtrosAtivos = new List<string>();
+                if (!string.IsNullOrEmpty(currentFilter)) filtrosAtivos.Add($"Busca: \"{currentFilter}\"");
+                if (!string.IsNullOrEmpty(currentStatus)) filtrosAtivos.Add($"Situação: {currentStatus}");
+                if (!string.IsNullOrEmpty(currentPrioridade)) filtrosAtivos.Add($"Prioridade: {currentPrioridade}");
+                if (!string.IsNullOrEmpty(currentCategoria))
+                {
+                    var categoriaNome = categorias.FirstOrDefault(c => c.Id.ToString() == currentCategoria)?.Nome ?? "Categoria";
+                    filtrosAtivos.Add($"Categoria: {categoriaNome}");
+                }
+                if (!string.IsNullOrEmpty(currentDataCriacao)) filtrosAtivos.Add($"Criação: {currentDataCriacao}");
+                if (!string.IsNullOrEmpty(currentDataLimite)) filtrosAtivos.Add($"Limite: {currentDataLimite}");
+            }
+            @string.Join(" | ", filtrosAtivos)
+        </div>
+    </div>
+}
 
-<p>
-    <a asp-action="Create" class="btn btn-sm btn-primary">
-        <i class="bi bi-plus-square"></i>
-    Adicionar</a>
-</p>
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
@@ -77,59 +155,136 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].Categoria)
             </th>
-            <th></th>
+            <th class="col-1">Ações</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.Titulo)</td>
-            <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
-            <td>@Html.DisplayFor(modelItem => item.DataDeCriacao)</td>
-            <td>@Html.DisplayFor(modelItem => item.DataLimite)</td>
-            <td class="text-center">
-                <span class="badge
-                      @(item.Prioridade == (PrioridadeEnum)0 ? "bg-success" :
-                      item.Prioridade == (PrioridadeEnum)1 ? "bg-warning" :
-                      item.Prioridade == (PrioridadeEnum)2 ? "bg-danger" : "bg-primary")">
-                    @item.Prioridade
-                </span>
-            </td>
-            <td>@Html.DisplayFor(modelItem => item.Situacao)</td>
-            <td>
-                @(item.Categoria != null ? item.Categoria.Nome : "")
-            </td>
-                <td class="d-flex justify-content-center align-items-center gap-2">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-info-square"></i>
-                    </a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">
-                        <i class="bi bi-trash"></i>
-                    </a>
-            </td>
-        </tr>
-}
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Titulo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DataDeCriacao)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DataLimite)</td>
+                    <td class="text-center">
+                        <span class="badge
+                                          @(item.Prioridade == (PrioridadeEnum)0 ? "bg-success rounded-pill" :
+                                                                                        item.Prioridade == (PrioridadeEnum)1 ? "bg-warning rounded-pill text-dark " :
+                                                                                        item.Prioridade == (PrioridadeEnum)2 ? "bg-danger rounded-pill" : "bg-primary")">
+                            @item.Prioridade
+                        </span>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Situacao)</td>
+                    <td>
+                        @(item.Categoria != null ? item.Categoria.Nome : "")
+                    </td>
+                    <td class="d-flex justify-content-center align-items-center gap-2">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                            <i class="bi bi-info-square"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center py-5">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-search display-1 text-muted mb-3"></i>
+                        <h4 class="text-muted">Nenhuma tarefa encontrada</h4>
+                        <p class="text-muted mb-3">
+                            @if (!string.IsNullOrEmpty(currentFilter) ||
+                                                    !string.IsNullOrEmpty(currentStatus) ||
+                                                    !string.IsNullOrEmpty(currentPrioridade) ||
+                                                    !string.IsNullOrEmpty(currentCategoria) ||
+                                                    !string.IsNullOrEmpty(currentDataCriacao) ||
+                                                    !string.IsNullOrEmpty(currentDataLimite))
+                            {
+                                <text>Nenhum resultado para os filtros aplicados.</text>
+                            }
+                            else
+                            {
+                                <text>Nenhuma tarefa cadastrada no momento.</text>
+                            }
+                        </p>
+                        @if (!string.IsNullOrEmpty(currentFilter) ||
+                                            !string.IsNullOrEmpty(currentStatus) ||
+                                            !string.IsNullOrEmpty(currentPrioridade) ||
+                                            !string.IsNullOrEmpty(currentCategoria) ||
+                                            !string.IsNullOrEmpty(currentDataCriacao) ||
+                                            !string.IsNullOrEmpty(currentDataLimite))
+                        {
+                            <a asp-controller="TarefaModels" asp-action="Index" class="btn btn-primary">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Resetar Filtros
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Criar Primeira Tarefa
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
 <nav aria-label="Page navigation">
     <ul class="pagination">
         <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-searchString="@currentFilter" asp-route-statusFilter="@currentStatus">Anterior</a>
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-searchString="@currentFilter"
+               asp-route-statusFilter="@currentStatus"
+               asp-route-prioridadeFilter="@currentPrioridade"
+               asp-route-categoriaFilter="@currentCategoria"
+               asp-route-dataCriacaoFilter="@currentDataCriacao"
+               asp-route-dataLimiteFilter="@currentDataLimite">
+                Anterior
+            </a>
         </li>
 
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchString="@currentFilter" asp-route-statusFilter="@currentStatus">@i</a>
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-pageNumber="@i"
+                   asp-route-searchString="@currentFilter"
+                   asp-route-statusFilter="@currentStatus"
+                   asp-route-prioridadeFilter="@currentPrioridade"
+                   asp-route-categoriaFilter="@currentCategoria"
+                   asp-route-dataCriacaoFilter="@currentDataCriacao"
+                   asp-route-dataLimiteFilter="@currentDataLimite">
+                    @i
+                </a>
             </li>
         }
 
         <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-searchString="@currentFilter" asp-route-statusFilter="@currentStatus">Próxima</a>
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-searchString="@currentFilter"
+               asp-route-statusFilter="@currentStatus"
+               asp-route-prioridadeFilter="@currentPrioridade"
+               asp-route-categoriaFilter="@currentCategoria"
+               asp-route-dataCriacaoFilter="@currentDataCriacao"
+               asp-route-dataLimiteFilter="@currentDataLimite">
+                Próxima
+            </a>
         </li>
     </ul>
 </nav>
