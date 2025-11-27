@@ -7,7 +7,7 @@ namespace ListaDeTarefas.Enums
         [Display(Name = "Baixa")]
         Baixa = 0,
         [Display(Name = "Média")]
-        Media = 1,
+        Média = 1,
         [Display(Name = "Alta")]
         Alta = 2
     }
