@@ -1,60 +1,92 @@
 ﻿@model ListaDeTarefas.Models.TarefaModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes da Tarefa";
 }
 
-<h1>Details</h1>
+<div class="card text-center">
+    <div class="card-header bg-info-subtle">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-list-task me-2"></i>Detalhes da Tarefa
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <dl class="row text-start">
 
-<div>
-    <h4>TarefaModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descricao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descricao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataDeCriacao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataDeCriacao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataLimite)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataLimite)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Prioridade)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Prioridade)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Situacao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Situacao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Categoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Categoria.Nome)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                    @* Titulo *@
+                    <dt class="col-sm-3 fw-bold">
+                        <i class="bi bi-file-text me-2"></i>@Html.DisplayNameFor(model => model.Titulo)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.Titulo)
+                    </dd>
+
+                    @* Descricao *@
+                    <dt class="col-sm-3 fw-bold mt-2">
+                        <i class="bi bi-card-text me-2"></i>@Html.DisplayNameFor(model => model.Descricao)
+                    </dt>
+                    <dd class="col-sm-9 mt-2">
+                        @Html.DisplayFor(model => model.Descricao)
+                    </dd>
+
+                    <hr class="mt-3 mb-3" />
+
+                    @* Categoria *@
+                    <dt class="col-sm-3 fw-bold">
+                        <i class="bi bi-tag me-2"></i>@Html.DisplayNameFor(model => model.Categoria)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.Categoria.Nome)
+                    </dd>
+
+                    @* Prioridade *@
+                    <dt class="col-sm-3 fw-bold mt-2">
+                        <i class="bi bi-exclamation-octagon me-2"></i>@Html.DisplayNameFor(model => model.Prioridade)
+                    </dt>
+                    <dd class="col-sm-9 mt-2">
+                        @Html.DisplayFor(model => model.Prioridade)
+                    </dd>
+
+                    @* Situacao *@
+                    <dt class="col-sm-3 fw-bold mt-2">
+                        <i class="bi bi-check-circle me-2"></i>@Html.DisplayNameFor(model => model.Situacao)
+                    </dt>
+                    <dd class="col-sm-9 mt-2">
+                        @Html.DisplayFor(model => model.Situacao)
+                    </dd>
+
+                    <hr class="mt-3 mb-3" />
+
+                    @* Data de Criacao *@
+                    <dt class="col-sm-3 fw-bold">
+                        <i class="bi bi-calendar-plus me-2"></i>@Html.DisplayNameFor(model => model.DataDeCriacao)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.DataDeCriacao)
+                    </dd>
+
+                    @* Data Limite *@
+                    <dt class="col-sm-3 fw-bold mt-2">
+                        <i class="bi bi-calendar-x me-2"></i>@Html.DisplayNameFor(model => model.DataLimite)
+                    </dt>
+                    <dd class="col-sm-9 mt-2">
+                        @Html.DisplayFor(model => model.DataLimite)
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-transparent">
+        <div class="d-flex gap-2 justify-content-center">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary col-6">
+                <i class="bi bi-pencil me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary col-6">
+                <i class="bi bi-arrow-left me-2"></i>Voltar para a Lista
+            </a>
+        </div>
+    </div>
 </div>
