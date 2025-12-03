@@ -1,17 +1,30 @@
 
-<h1 align="center">Sistema de Gestão de Tarefas - Task Management System</h1>
+<h1 align="center">Sistema de Gestão de Tarefas - TaskList</h1>
 
-<h2>Sobre - About</h2>
-<p lang="pt-BR">
-PT-BR: Um sistema moderno e intuitivo de gestão de tarefas desenvolvido em ASP.NET MVC.
+<h2>Sobre</h2>
+<p >
+Um sistema básico de gestão de tarefas desenvolvido em ASP.NET MVC.
+</p>
 
-O primeiro passo desse projeto foi adicionar um botão para alternar entre os modos claro e escuro.
+<h2>📸 Screenshots da Aplicação</h2>
+
+<h3>1. Tela Inicial (Tema claro)</h3>
+<p align="center">
+    <img width="1920" height="945" alt="image" src="https://github.com/user-attachments/assets/1d28c8c3-134b-4a57-94bb-c93ec9ba2c4b" />
 
 </p>
-<p lang="en">
-  
-EN: A modern and intuitive task management system developed in ASP.NET MVC.
 
-The first step in this project was to add a button to switch between light and dark modes.
+<h3>2. Tela inicial (Tema escuro)</h3>
+<p align="center">
+    <img width="1920" height="944" alt="image" src="https://github.com/user-attachments/assets/f790569a-6c16-4b0b-acd9-c4447768e36d" />
+</p>
 
+<h3>3. Formulário de criação de categoria (Tema claro)</h3>
+<p align="center">
+  <img width="1312" height="366" alt="image" src="https://github.com/user-attachments/assets/fa73e6f6-f23e-4963-b16c-10c1e5053d98" />
+</p>
+
+<h3>4. Formulário de criação de categoria (Tema escuro)</h3>
+<p align="center">
+  <img width="1329" height="375" alt="image" src="https://github.com/user-attachments/assets/2136413e-717a-4d13-a2b7-a99e53d98259" />
 </p>
