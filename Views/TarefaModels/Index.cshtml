@@ -138,12 +138,6 @@
                 @Html.DisplayNameFor(model => model[0].Titulo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].DataDeCriacao)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model[0].DataLimite)
             </th>
             <th>
@@ -151,9 +145,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Situacao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Categoria)
             </th>
             <th class="col-1">Ações</th>
         </tr>
@@ -165,8 +156,6 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Titulo)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DataDeCriacao)</td>
                     <td>@Html.DisplayFor(modelItem => item.DataLimite)</td>
                     <td class="text-center">
                         <span class="badge
@@ -177,9 +166,7 @@
                         </span>
                     </td>
                     <td>@Html.DisplayFor(modelItem => item.Situacao)</td>
-                    <td>
-                        @(item.Categoria != null ? item.Categoria.Nome : "")
-                    </td>
+             
                     <td class="d-flex justify-content-center align-items-center gap-2">
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
                             <i class="bi bi-pencil-square"></i>
@@ -241,7 +228,7 @@
 </table>
 
 <nav aria-label="Page navigation">
-    <ul class="pagination">
+    <ul class="pagination ">
         <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
             <a class="page-link"
                asp-action="Index"

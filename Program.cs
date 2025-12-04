@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ApplicationDbContext.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ListaDeTarefasContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ListaDeTarefasContext") ?? throw new InvalidOperationException("Connection string 'ListaDeTarefasContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ListaDeTarefasContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
